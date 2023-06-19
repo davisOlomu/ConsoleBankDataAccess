@@ -190,31 +190,5 @@ namespace ConsoleBankDataAccess
             }
             return usernameExist;
         }
-     
-        // Pin has to be unique.
-        public bool VerifyPin(int pin)
-        {
-            OpenConnection();
-
-            string sql = "Select Pin From CUSTOMER";
-            bool pinExist = false;
-
-            using (SqlCommand command = new SqlCommand(sql, _connection))
-            {
-                using SqlDataReader getPin = command.ExecuteReader();
-
-                while (getPin.Read())
-                {
-                    for (int i = 0; i < getPin.FieldCount; i++)
-                    {
-                        if (pin == (int)getPin.GetValue(i))
-                        {
-                            pinExist = true;
-                        }
-                    }
-                }
-            }
-            return pinExist;
-        }
     }
 }
