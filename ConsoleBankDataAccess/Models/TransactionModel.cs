@@ -1,6 +1,5 @@
 ﻿using System;
 
-
 namespace ConsoleBankDataAccess
 {
     public class TransactionModel
@@ -10,10 +9,7 @@ namespace ConsoleBankDataAccess
         public string TransactionDescription { get; set; }
         public DateTime TransactionDate { get; set; }
         public TimeSpan TransactionTime { get; set; }
-
         public TransactionStatus TransactionStatus = new Int32();
-
         public TransactionType TransactionType = new Int32();
-    
     }
 }
