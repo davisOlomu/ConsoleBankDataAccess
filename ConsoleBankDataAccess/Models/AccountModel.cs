@@ -15,6 +15,5 @@ namespace ConsoleBankDataAccess
         public AccountType AccountType { get; set; }
         public decimal Balance { get; set; }
         public int Pin { get; set; }
-
     }
 }
