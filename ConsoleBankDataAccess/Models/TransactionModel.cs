@@ -2,6 +2,9 @@
 
 namespace ConsoleBankDataAccess
 {
+    /// <summary>
+    /// Model the Transaction table.
+    /// </summary>
     public class TransactionModel
     {
         public string Username { get; set; }
