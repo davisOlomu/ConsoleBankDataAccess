@@ -10,7 +10,10 @@ namespace ConsoleBankDataAccess
         private SqlConnection _connection = null;
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["ConsoleBankingSqlServer"].ConnectionString;
 
-        
+        /// <summary>
+        /// Create a connection using the connectionstring
+        /// located in the app.config file.
+        /// </summary>
         public void OpenConnection()
         {
             _connection = new SqlConnection
@@ -26,7 +29,12 @@ namespace ConsoleBankDataAccess
                 Console.WriteLine("There is an error while establishing a connection with the SqlServer");
             }
         }
-        // New user account
+
+        /// <summary>
+        /// User data inserted into the Customer table.
+        /// Entrys's are validated and must meet certain requirements.
+        /// </summary>
+        /// <param name="newAccount">A new user account.</param>
         public void CreateAccount(AccountModel newAccount)
         {
             OpenConnection();
@@ -36,12 +44,18 @@ namespace ConsoleBankDataAccess
             command.Parameters.Add("@timeCreated", SqlDbType.Time).Value = DateTime.Now.TimeOfDay.ToString();
             command.ExecuteNonQuery();
         }
-        // Read user's data
+
+        /// <summary>
+        /// Reads a valid user's information from the Customer table.
+        /// </summary>
+        /// <param name="user">A valid user</param>
+        /// <param name="sql">Sql Select Statement</param>
+        /// <returns></returns>
         public bool GetUser(AccountModel user, string sql)
         {
             OpenConnection();
 
-            bool isUser = false;  
+            bool isUser = false;
             using (SqlCommand command = new SqlCommand(sql, _connection))
             {
                 using SqlDataReader readUser = command.ExecuteReader();
@@ -68,7 +82,12 @@ namespace ConsoleBankDataAccess
             }
             return isUser;
         }
-        // Create a new transaction
+
+        /// <summary>
+        /// A new transaction is inserted into the Transaction table.
+        /// </summary>
+        /// <param name="newTransaction">A new transaction</param>
+        /// <param name="username">Transaction owner</param>
         public void CreateTransaction(TransactionModel newTransaction, string username)
         {
             OpenConnection();
@@ -78,7 +97,12 @@ namespace ConsoleBankDataAccess
             command.Parameters.Add("@timeOfTrans", SqlDbType.Time).Value = DateTime.Now.TimeOfDay.ToString();
             command.ExecuteNonQuery();
         }
-        // View transaction history as table
+
+        /// <summary>
+        /// Reads a valid user's transactions
+        /// </summary>
+        /// <param name="username">Transaction owner</param>
+        /// <returns></returns>
         public DataTable GetTransactionHistory(string username)
         {
             OpenConnection();
@@ -94,7 +118,12 @@ namespace ConsoleBankDataAccess
             }
             return table;
         }
-        // Update balance.
+
+        /// <summary>
+        /// Ensures user balance is consistent with every transaction.
+        /// </summary>
+        /// <param name="account">Transaction account</param>
+        /// <param name="balance">User balance</param>
         public void UpdateBalance(AccountModel account, decimal balance)
         {
             OpenConnection();
@@ -102,7 +131,13 @@ namespace ConsoleBankDataAccess
             using SqlCommand command = new SqlCommand(sql, _connection);
             command.ExecuteNonQuery();
         }
-        // Username has to be unique.
+
+        /// <summary>
+        /// Ensures no two users have the same username at the time
+        /// of creating a new account.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         public bool VerifyUserName(string username)
         {
             OpenConnection();

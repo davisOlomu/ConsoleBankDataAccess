@@ -2,6 +2,9 @@
 
 namespace ConsoleBankDataAccess
 {
+    /// <summary>
+    /// Model the Customer table.
+    /// </summary>
     public class AccountModel
     {
         public string FirstName { get; set; }

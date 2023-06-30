@@ -1,6 +1,8 @@
 ﻿namespace ConsoleBankDataAccess
 {
-    // Account Types enumerated.
+    /// <summary>
+    /// Choose an account preference.
+    /// </summary>
     public enum AccountType
     {
         Savings = 1,
