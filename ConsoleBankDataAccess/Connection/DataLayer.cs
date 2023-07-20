@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Configuration;
+using System.Data.SqlClient;
 
 namespace ConsoleBankDataAccess
 {
     public class DataLayer
     {
-        private SqlConnection _connection = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        private  SqlConnection _connection = null;
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["ConsoleBankingSqlServer"].ConnectionString;
 
         /// <summary>
@@ -26,7 +29,7 @@ namespace ConsoleBankDataAccess
             }
             catch (Exception)
             {
-                Console.WriteLine("There is an error while establishing a connection with the SqlServer");
+                Console.WriteLine("There is an error while establishing a connection with the SqlServer.");
             }
         }
 
@@ -54,8 +57,8 @@ namespace ConsoleBankDataAccess
         public bool GetUser(AccountModel user, string sql)
         {
             OpenConnection();
-
             bool isUser = false;
+
             using (SqlCommand command = new SqlCommand(sql, _connection))
             {
                 using SqlDataReader readUser = command.ExecuteReader();
@@ -73,6 +76,7 @@ namespace ConsoleBankDataAccess
                     user.DateCreated = (DateTime)readUser["DateCreated"];
                     user.TimeCreated = (TimeSpan)readUser["TimeCreated"];
                     user.Pin = (int)readUser["Pin"];
+
                     isUser = true;
                 }
                 else
@@ -112,9 +116,9 @@ namespace ConsoleBankDataAccess
 
             using (SqlCommand command = new SqlCommand(sql, _connection))
             {
-                using SqlDataReader getTrans = command.ExecuteReader();
-                table.Load(getTrans);
-                getTrans.Close();
+                using SqlDataReader getTransactions = command.ExecuteReader();
+                table.Load(getTransactions);
+                getTransactions.Close();
             }
             return table;
         }
