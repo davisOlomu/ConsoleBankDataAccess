@@ -2,6 +2,7 @@
 using System.Data;
 using System.Configuration;
 using System.Data.SqlClient;
+using Spectre.Console;
 
 namespace ConsoleBankDataAccess
 {
@@ -10,7 +11,7 @@ namespace ConsoleBankDataAccess
         /// <summary>
         /// 
         /// </summary>
-        private  SqlConnection _connection = null;
+        private SqlConnection _connection = null;
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["ConsoleBankingSqlServer"].ConnectionString;
 
         /// <summary>
@@ -29,7 +30,7 @@ namespace ConsoleBankDataAccess
             }
             catch (Exception)
             {
-                Console.WriteLine("There is an error while establishing a connection with the SqlServer.");
+                AnsiConsole.Write(new Markup("[red]There is an error while establishing a connection with the SqlServer.[/]"));
             }
         }
 
@@ -43,8 +44,8 @@ namespace ConsoleBankDataAccess
             OpenConnection();
             string sql = "INSERT INTO CUSTOMER" + "(FirstName,LastName,Email,AccountNumber,UserName,Password,AccountType,AccountBalance,DateCreated, TimeCreated,Pin)VALUES" + $"('{newAccount.FirstName}','{newAccount.LastName}','{newAccount.Email}','{newAccount.AccountNumber}','{newAccount.UserName}','{newAccount.Password}','{newAccount.AccountType}','{newAccount.Balance}',@dateCreated,@timeCreated,{newAccount.Pin})";
             using SqlCommand command = new SqlCommand(sql, _connection);
-            command.Parameters.Add("@dateCreated", SqlDbType.Date).Value = DateTime.Now.ToShortDateString();
-            command.Parameters.Add("@timeCreated", SqlDbType.Time).Value = DateTime.Now.TimeOfDay.ToString();
+            command.Parameters.Add("@dateCreated", SqlDbType.DateTime).Value = DateTime.Now.ToShortDateString();
+            command.Parameters.Add("@timeCreated", SqlDbType.DateTime).Value = DateTime.Now.ToShortTimeString();
             command.ExecuteNonQuery();
         }
 
@@ -74,14 +75,10 @@ namespace ConsoleBankDataAccess
                     user.AccountType = (AccountType)Enum.Parse(typeof(AccountType), "" + readUser["AccountType"]);
                     user.Balance = (decimal)readUser["AccountBalance"];
                     user.DateCreated = (DateTime)readUser["DateCreated"];
-                    user.TimeCreated = (TimeSpan)readUser["TimeCreated"];
+                    user.TimeCreated = (DateTime)readUser["TimeCreated"];
                     user.Pin = (int)readUser["Pin"];
 
                     isUser = true;
-                }
-                else
-                {
-                    isUser = false;
                 }
             }
             return isUser;
@@ -97,8 +94,8 @@ namespace ConsoleBankDataAccess
             OpenConnection();
             string sql = "INSERT INTO TRANSACTIONS" + "(UserName,Amount,Description,Type,Date,Time,Status)VALUES" + $"('{username}',{newTransaction.TransactionAmount},'{newTransaction.TransactionDescription}','{newTransaction.TransactionType}',@dateOfTrans,@timeOfTrans,'{newTransaction.TransactionStatus}')";
             using SqlCommand command = new SqlCommand(sql, _connection);
-            command.Parameters.Add("@dateOfTrans", SqlDbType.Date).Value = DateTime.Now.ToShortDateString();
-            command.Parameters.Add("@timeOfTrans", SqlDbType.Time).Value = DateTime.Now.TimeOfDay.ToString();
+            command.Parameters.Add("@dateOfTrans", SqlDbType.DateTime).Value = DateTime.Now.ToShortDateString();
+            command.Parameters.Add("@timeOfTrans", SqlDbType.DateTime).Value = DateTime.Now.ToShortTimeString();
             command.ExecuteNonQuery();
         }
 
@@ -107,20 +104,21 @@ namespace ConsoleBankDataAccess
         /// </summary>
         /// <param name="username">Transaction owner</param>
         /// <returns></returns>
-        public DataTable GetTransactionHistory(string username)
+        public void GetTransactionHistory(string username)
         {
             OpenConnection();
-            TransactionModel transModel = new TransactionModel();
-            DataTable table = new DataTable();
-            string sql = $"Select Amount,Type,Status,Time,Description From Transactions Where Username = '{username}'";
+            var table = new Table();
+            string sql = $"Select * From Transactions Where Username = '{username}'";
 
-            using (SqlCommand command = new SqlCommand(sql, _connection))
+            using SqlCommand command = new SqlCommand(sql, _connection);
+            using SqlDataReader readTransactions = command.ExecuteReader();
+            table.Title("[blue]Transaction History[/]");
+            table.AddColumns("[blue]Username[/]", "[blue]Amount[/]", "[blue]Description[/]", "[blue]Type[/]", "[blue]Date/Time[/]", "[blue]Status[/]");
+            while (readTransactions.Read())
             {
-                using SqlDataReader getTransactions = command.ExecuteReader();
-                table.Load(getTransactions);
-                getTransactions.Close();
+                table.AddRow($"{readTransactions["Username"]}", $"[red]{readTransactions["Amount"]}[/]", $"[green]{readTransactions["Description"]}[/]", $"[yellow]{readTransactions["Type"]}[/]", $"[purple]{readTransactions["Date"]}[/]",$"[green]{readTransactions["Status"]}[/]");
             }
-            return table;
+            AnsiConsole.Write(table);
         }
 
         /// <summary>
