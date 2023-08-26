@@ -111,14 +111,19 @@ namespace ConsoleBankDataAccess
             string sql = $"Select * From Transactions Where Username = '{username}'";
 
             using SqlCommand command = new SqlCommand(sql, _connection);
-            using SqlDataReader readTransactions = command.ExecuteReader();
-            table.Title("[blue]Transaction History[/]");
-            table.AddColumns("[blue]Username[/]", "[blue]Amount[/]", "[blue]Description[/]", "[blue]Type[/]", "[blue]Date/Time[/]", "[blue]Status[/]");
+            using SqlDataReader readTransactions = command.ExecuteReader(); 
+            
+            table.Title("[blue]\t\tTransaction History[/]\n\n");
+            table.AddColumns("[blue]Amount[/]", "[blue]Description[/]", "[blue]Type[/]", "[blue]Date[/]", "[blue]Time[/]", "[blue]Status[/]");
             while (readTransactions.Read())
             {
-                table.AddRow($"{readTransactions["Username"]}", $"[red]{readTransactions["Amount"]}[/]", $"[green]{readTransactions["Description"]}[/]", $"[yellow]{readTransactions["Type"]}[/]", $"[purple]{readTransactions["Date"]}[/]",$"[green]{readTransactions["Status"]}[/]");
+                DateTime date = (DateTime)readTransactions["Date"];
+                DateTime time = (DateTime)readTransactions["Time"];
+
+                table.AddRow($"[red]N{readTransactions["Amount"]}[/]", $"[green]{readTransactions["Description"]}[/]", $"[yellow]{readTransactions["Type"]}[/]", $"[purple]{date.ToShortDateString()}[/]", $"[red]{time.ToShortTimeString()}[/]", $"[green]{readTransactions["Status"]}[/]");
             }
-            AnsiConsole.Write(table);
+            table.Border(TableBorder.Horizontal);
+            AnsiConsole.Write(table.Centered());
         }
 
         /// <summary>
