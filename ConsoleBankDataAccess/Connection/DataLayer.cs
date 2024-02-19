@@ -1,8 +1,9 @@
-﻿using System;
-using System.Data;
+﻿using Spectre.Console;
+using System;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
-using Spectre.Console;
+
 
 namespace ConsoleBankDataAccess
 {
@@ -119,8 +120,9 @@ namespace ConsoleBankDataAccess
             {
                 DateTime date = (DateTime)readTransactions["Date"];
                 DateTime time = (DateTime)readTransactions["Time"];
+                decimal amount = (decimal)readTransactions["Amount"];
 
-                table.AddRow($"[red]N{readTransactions["Amount"]}[/]", $"[green]{readTransactions["Description"]}[/]", $"[yellow]{readTransactions["Type"]}[/]", $"[purple]{date.ToShortDateString()}[/]", $"[red]{time.ToShortTimeString()}[/]", $"[green]{readTransactions["Status"]}[/]");
+                table.AddRow($"[red]N {amount.ToString("F")}[/]", $"[green]{readTransactions["Description"]}[/]", $"[yellow]{readTransactions["Type"]}[/]", $"[purple]{date.ToShortDateString()}[/]", $"[red]{time.ToShortTimeString()}[/]", $"[green]{readTransactions["Status"]}[/]");
             }
             table.Border(TableBorder.Horizontal);
             AnsiConsole.Write(table.Centered());
