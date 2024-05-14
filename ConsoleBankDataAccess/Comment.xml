@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ConsoleBankDataAccess</name>
+    </assembly>
+    <members>
+        <member name="F:ConsoleBankDataAccess.DataLayer._connection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ConsoleBankDataAccess.DataLayer.OpenConnection">
+            <summary>
+            Create a connection using the connectionstring
+            located in the app.config file.
+            </summary>
+        </member>
+        <member name="M:ConsoleBankDataAccess.DataLayer.CreateAccount(ConsoleBankDataAccess.AccountModel)">
+            <summary>
+            User data inserted into the Customer table.
+            Entrys's are validated and must meet certain requirements.
+            </summary>
+            <param name="newAccount">A new user account.</param>
+        </member>
+        <member name="M:ConsoleBankDataAccess.DataLayer.GetUser(ConsoleBankDataAccess.AccountModel,System.String)">
+            <summary>
+            Reads a valid user's information from the Customer table.
+            </summary>
+            <param name="user">A valid user</param>
+            <param name="sql">Sql Select Statement</param>
+            <returns></returns>
+        </member>
+        <member name="M:ConsoleBankDataAccess.DataLayer.CreateTransaction(ConsoleBankDataAccess.TransactionModel,System.String)">
+            <summary>
+            A new transaction is inserted into the Transaction table.
+            </summary>
+            <param name="newTransaction">A new transaction</param>
+            <param name="username">Transaction owner</param>
+        </member>
+        <member name="M:ConsoleBankDataAccess.DataLayer.GetTransactionHistory(System.String)">
+            <summary>
+            Reads a valid user's transactions
+            </summary>
+            <param name="username">Transaction owner</param>
+            <returns></returns>
+        </member>
+        <member name="M:ConsoleBankDataAccess.DataLayer.UpdateBalance(ConsoleBankDataAccess.AccountModel,System.Decimal)">
+            <summary>
+            Ensures user balance is consistent with every transaction.
+            </summary>
+            <param name="account">Transaction account</param>
+            <param name="balance">User balance</param>
+        </member>
+        <member name="M:ConsoleBankDataAccess.DataLayer.VerifyUserName(System.String)">
+            <summary>
+            Ensures no two users have the same username at the time
+            of creating a new account.
+            </summary>
+            <param name="username"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ConsoleBankDataAccess.AccountType">
+            <summary>
+            Choose an account preference.
+            </summary>
+        </member>
+        <member name="T:ConsoleBankDataAccess.TransactionStatus">
+            <summary>
+            Transaction notification.
+            </summary>
+        </member>
+        <member name="T:ConsoleBankDataAccess.TransactionType">
+            <summary>
+            A transaction type is defined based on the effect on the account balance
+            </summary>
+        </member>
+        <member name="T:ConsoleBankDataAccess.AccountModel">
+            <summary>
+            Model the Customer table.
+            </summary>
+        </member>
+        <member name="T:ConsoleBankDataAccess.TransactionModel">
+            <summary>
+            Model the Transaction table.
+            </summary>
+        </member>
+    </members>
+</doc>
